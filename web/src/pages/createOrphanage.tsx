@@ -14,7 +14,6 @@ import '../styles/pages/create-orphanages.css';
 const CreateOrpganage: React.FC = () => {
     const history = useHistory();
 
-
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0 ,0]);
     const [position, setPosition] = useState({ latitude: 0, longitude: 0})
 
