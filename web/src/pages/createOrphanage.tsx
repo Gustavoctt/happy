@@ -15,6 +15,7 @@ const CreateOrpganage: React.FC = () => {
     const history = useHistory();
 
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0 ,0]);
+
     const [position, setPosition] = useState({ latitude: 0, longitude: 0})
 
     const [name, setName] = useState('');
@@ -22,6 +23,7 @@ const CreateOrpganage: React.FC = () => {
     const [instructions, setInstructions] = useState('');
     const [opening_hours, setOpeningHours] = useState('');
     const [open_on_weekends, setOpenOnWeekends] = useState(true);
+
     const [images, setImages] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
 
@@ -38,7 +40,6 @@ const CreateOrpganage: React.FC = () => {
     function handleMapClick(event: LeafletMouseEvent){
         const { lat, lng } = event.latlng;
 
-        
         setPosition({
             latitude: lat,
             longitude: lng,
@@ -50,18 +51,18 @@ const CreateOrpganage: React.FC = () => {
             return;
         }
 
-        const seletedImages = Array.from(event.target.files);
+        var selectedImages = Array.from(event.target.files);
 
-        setImages(seletedImages);
+        setImages(images.concat(selectedImages));
 
-        const selectedImagesPreview = seletedImages.map(image => {
+        var selectedImagesPreview = selectedImages.map(image => {
             return URL.createObjectURL(image);
         });
 
-        setPreviewImages(selectedImagesPreview);
+        setPreviewImages(previewImages.concat(selectedImagesPreview));
     }
 
-    function handleSubmit(event: FormEvent){
+    async function handleSubmit(event: FormEvent){
         event.preventDefault();
 
         const {latitude, longitude} = position;
@@ -80,11 +81,17 @@ const CreateOrpganage: React.FC = () => {
             data.append('images', image);
         })
 
-        api.post('orphanages', data);
+        try {
+            await api.post('orphanages', data);
+    
+            alert('Cadastro criado com sucesso')
+            
+            history.push('/app');
+        } catch {
+            alert('Erro ao cadastrar')
+        }
 
-        alert('Cadastro criado com sucesso')
 
-        history.push('/app');
     }
 
   return (
@@ -97,7 +104,7 @@ const CreateOrpganage: React.FC = () => {
                       <legend>Dados</legend>
 
                       <Map
-                        center={initialPosition}
+                        center={[-28.3574272,-49.2732416]}
                         style={{width: '100%', height: 400}}
                         zoom={14}
                         onclick={handleMapClick}
@@ -113,10 +120,10 @@ const CreateOrpganage: React.FC = () => {
                             icon={mapIcon}
                             position={[
                                 position.latitude,
-                                position.latitude
+                                position.longitude
                             ]}
                             />
-                        ) }
+                        )}
                       </Map>
 
                       <div className="input-block">
@@ -167,6 +174,15 @@ const CreateOrpganage: React.FC = () => {
                                 id="instructions"
                                 value={instructions}
                                 onChange={event => setInstructions(event.target.value)}
+                            />
+                        </div>
+
+                        <div className="input-block">
+                            <label htmlFor="opening_hours">Horário de Funcionamento</label>
+                            <input 
+                                id="opening_hours"
+                                value={opening_hours}
+                                onChange={e => setOpeningHours(e.target.value)}
                             />
                         </div>
 
