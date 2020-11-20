@@ -83,10 +83,8 @@ const CreateOrpganage: React.FC = () => {
 
         try {
             await api.post('orphanages', data);
-    
-            alert('Cadastro criado com sucesso')
             
-            history.push('/app');
+            history.push('/success');
         } catch {
             alert('Erro ao cadastrar')
         }

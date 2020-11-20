@@ -6,6 +6,8 @@ import OrphanagesMap from './pages/ophanagesMap';
 import Orphanages from './pages/orphanage';
 import OrphanagesCreate from './pages/createOrphanage';
 
+import Success from './pages/success';
+
 function Routes(){
     return (
         <BrowserRouter>
@@ -15,6 +17,8 @@ function Routes(){
 
                 <Route path="/orphanages/create" component={OrphanagesCreate}/>
                 <Route path="/orphanages/:id" component={Orphanages}/>
+
+                <Route path="/success" component={Success}/>
             </Switch>
         </BrowserRouter>
     );
